@@ -9,8 +9,8 @@ log.setLevel(logging.ERROR)
 
 @app.route("/")
 def home():
-    return "<h1>Hello aditya 1 </h1>"
-           <h2>1.0.0 </h2>
+    return "<h1>Hello aditya 2 </h1>"
+           
            
 
 if __name__ == "__main__":
