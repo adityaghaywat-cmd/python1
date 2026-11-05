@@ -1,0 +1,42 @@
+PRODUCTION - EXECUTE SHELL :
+
+cd /var/lib/jenkins/workspace/freestyle-python1
+
+sudo pkill -f 'python3 app.py' || true
+
+sleep 3
+
+sudo python3 -m pip install -r requirements.txt
+
+sudo nohup python3 app.py > flask.log 2>&1 < /dev/null &
+
+sleep 5
+
+
+tar --exclude='./venv' \
+    --exclude='./flask.log' \
+    --exclude='./freestyle-python1-*.tar' \
+    -cvf freestyle-python1-$VERSION.tar .
+
+echo "Build Successful"
+
+----------------------------------------
+ROLLBACK SCRIPT : 
+
+
+cd /var/lib/jenkins/workspace/freestyle-python1
+
+rm -rf ./*
+
+sudo pkill -f 'python3 app.py' || true
+
+sleep 3
+
+curl -u admin:123456789 -o freestyle-python1-$VERSION.tar http://localhost:8081/repository/nexus-python1/freestyle-python1/freestyle-python1/$VERSION/freestyle-python1-$VERSION.tar
+
+tar -xvf freestyle-python1-$VERSION.tar .
+
+
+sudo python3 -m pip install -r requirements.txt
+
+sudo nohup python3 app.py > flask.log 2>&1 < /dev/null &
